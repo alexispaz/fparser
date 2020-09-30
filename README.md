@@ -1,6 +1,13 @@
-------------------------------------------------------------------------
-Fortran 90 function parser v1.1
-------------------------------------------------------------------------
+The original fparser by Roland Schmehl can be found at http://fparser.sourceforge.net.
+
+In this [repository](https://github.com/alexispaz/fparser)
+I only included some minor changes with respect to that code:
+
+- Adding autotools to compile fparser as library
+
+Here the original fparser README: 
+
+# Fortran 90 function parser v1.1
 
 This function parser module is intended for applications where a set of 
 mathematical fortran-style expressions is specified at runtime and is 
@@ -11,12 +18,11 @@ interpreted efficiently for the various variable values.
 The source code is available from:
 http://fparser.sourceforge.net
 
-Please send comments, corrections or questions to the author:
+Pleasesend comments, corrections or questions to the author:
 Roland Schmehl <roland.schmehl@alumni.uni-karlsruhe.de>
 
-------------------------------------------------------------------------
-1. Changes
-------------------------------------------------------------------------
+# Changes
+
 What's new in v1.1:       (thanks to Wilton P. Silva and Juha Mäkipelto
                            for the bug reports)
 
@@ -28,12 +34,10 @@ What's new in v1.1:       (thanks to Wilton P. Silva and Juha Mäkipelto
   CompileSubstr and CheckSyntax
 * Multiple operators produce error message in subroutine CheckSyntax
 
-------------------------------------------------------------------------
-2. Basic usage
-------------------------------------------------------------------------
+# Basic usage
 
-Step 0 - Module Import
-----------------------
+## Step 0 - Module Import
+
 In all program units where you want to use the function parser procedures 
 and variables you must import the module by:
 
@@ -43,8 +47,8 @@ This command imports only 5 public names: initf, parsef, evalf, EvalErrMsg
 and EvalErrType, which are explained in the following. The remainder of the 
 module is hidden to the calling program.
 
-Step 1 - Initialization
------------------------
+## Step 1 - Initialization
+
 The parser module has to be initialized for the simultaneous evaluation of 
 n functions by calling the module subroutine initp one time in your Fortran 
 code:
@@ -54,8 +58,7 @@ CALL initf (n)
 This allocates i=1,...,n internal data structures used by the byte-compiler 
 and subsequently by the bytecode-interpreter.
 
-Step 2 - Function parsing
--------------------------
+## Stoep 2 - Function parsing
 The i-th function string FuncStr is parsed (checked and compiled) into the 
 i-th bytecode by calling the module subroutine parsef:
 
@@ -66,8 +69,8 @@ in the one-dimensional string array Var (zero size of Var is acceptable).
 The number of variables is implicitly passed by the dimension of this array. 
 For some notes on the syntax of the function string see below.
 
-Step 3 - Function evaluation
-----------------------------
+## Step 3 - Function evaluation
+
 The i-th function value is evaluated for a specific set of variable values 
 by calling the module function evalf:
 
@@ -76,9 +79,7 @@ a = evalf (i, Val)
 The variable values are passed in the one-dimensional array Val which must 
 have the same dimension as array Var. 
 
-------------------------------------------------------------------------
-3. Error handling
-------------------------------------------------------------------------
+# Error handling
 
 An error in the function parsing step leads to a detailed error message 
 (Type and position of error) and program termination.
@@ -89,9 +90,7 @@ a value > 0 (EvalErrType=0 indicates no error). An error message from the
 bytecode-interpreter can be obtained by calling the character function 
 EvalErrMsg () without any argument.
 
-------------------------------------------------------------------------
-4. Function string syntax
-------------------------------------------------------------------------
+# Function string syntax
 
 Although they have to be passed as array elements of the same declared 
 length (Fortran 90 restriction), the variable names can be of arbitrary 
@@ -123,9 +122,7 @@ one digit before or following an optional decimal point. Valid exponent
 identifiers are 'e', 'E', 'd' or 'D'. If they appear they must be followed 
 by a valid exponent!
 
-------------------------------------------------------------------------
-5. Notes
-------------------------------------------------------------------------
+# Notes
 
 * The precision of real numbers can be adapted to the calling program by 
   adjusting the KIND parameter rn in the external module parameters.
@@ -133,9 +130,7 @@ by a valid exponent!
 * The package contains a sample Makefile and some test programs to 
   demonstrate implementation and performance of the function parser.
 
-------------------------------------------------------------------------
-6. Credits
-------------------------------------------------------------------------
+# Credits
 
 The function parser concept is based on a C++ class library written by 
 Juha Nieminen <warp@iki.fi> available from:
