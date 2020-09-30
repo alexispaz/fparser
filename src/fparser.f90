@@ -27,6 +27,7 @@ MODULE fparser
   IMPLICIT NONE
   !------- -------- --------- --------- --------- --------- --------- --------- -------
   PUBLIC                     :: initf,    & ! Initialize function parser for n functions
+                                destf,    & ! Destroy function parser
                                 parsef,   & ! Parse single function string
                                 evalf,    & ! Evaluate single function
                                 EvalErrMsg  ! Error message (Use only when EvalErrType>0)
@@ -40,28 +41,32 @@ MODULE fparser
                                                          cSub     = 4,          & 
                                                          cMul     = 5,          & 
                                                          cDiv     = 6,          & 
-                                                         cPow     = 7,          & 
-                                                         cAbs     = 8,          &
-                                                         cExp     = 9,          &
-                                                         cLog10   = 10,         &
-                                                         cLog     = 11,         &
-                                                         cSqrt    = 12,         &
-                                                         cSinh    = 13,         &
-                                                         cCosh    = 14,         &
-                                                         cTanh    = 15,         &
-                                                         cSin     = 16,         &
-                                                         cCos     = 17,         &
-                                                         cTan     = 18,         &
-                                                         cAsin    = 19,         &
-                                                         cAcos    = 20,         &
-                                                         cAtan    = 21,         &
-                                                         VarBegin = 22
+                                                         cMod     = 7,          & 
+                                                         cPow     = 8,          & 
+                                                         cAbs     = 9,          &
+                                                         cInt     = 10,         &
+                                                         cExp     = 11,         &
+                                                         cLog10   = 12,         &
+                                                         cLog     = 13,         &
+                                                         cSqrt    = 14,         &
+                                                         cSinh    = 15,         &
+                                                         cCosh    = 16,         &
+                                                         cTanh    = 17,         &
+                                                         cSin     = 18,         &
+                                                         cCos     = 19,         &
+                                                         cTan     = 20,         &
+                                                         cAsin    = 21,         &
+                                                         cAcos    = 22,         &
+                                                         cAtan    = 23,         &
+                                                         VarBegin = 24
   CHARACTER (LEN=1), DIMENSION(cAdd:cPow),  PARAMETER :: Ops      = (/ '+',     &
                                                                        '-',     &
                                                                        '*',     &
                                                                        '/',     &
+                                                                       '%',     &
                                                                        '^' /)
   CHARACTER (LEN=5), DIMENSION(cAbs:cAtan), PARAMETER :: Funcs    = (/ 'abs  ', &
+                                                                       'int  ', &
                                                                        'exp  ', &
                                                                        'log10', &
                                                                        'log  ', &
@@ -102,6 +107,14 @@ CONTAINS
        NULLIFY (Comp(i)%ByteCode,Comp(i)%Immed,Comp(i)%Stack)
     END DO
   END SUBROUTINE initf
+  !
+  SUBROUTINE destf
+    INTEGER             :: i
+    DO i=1,size(Comp)
+      DEALLOCATE (Comp(i)%ByteCode,Comp(i)%Immed,Comp(i)%Stack)
+    END DO
+    DEALLOCATE (Comp)
+  END SUBROUTINE destf
   !
   SUBROUTINE parsef (i, FuncStr, Var)
     !----- -------- --------- --------- --------- --------- --------- --------- -------
@@ -151,8 +164,10 @@ CONTAINS
        CASE   (cMul); Comp(i)%Stack(SP-1)=Comp(i)%Stack(SP-1)*Comp(i)%Stack(SP); SP=SP-1
        CASE   (cDiv); IF (Comp(i)%Stack(SP)==0._rn) THEN; EvalErrType=1; res=zero; RETURN; ENDIF
                       Comp(i)%Stack(SP-1)=Comp(i)%Stack(SP-1)/Comp(i)%Stack(SP); SP=SP-1
+       CASE   (cMod); Comp(i)%Stack(SP-1)=MOD(Comp(i)%Stack(SP-1),Comp(i)%Stack(SP)); SP=SP-1
        CASE   (cPow); Comp(i)%Stack(SP-1)=Comp(i)%Stack(SP-1)**Comp(i)%Stack(SP); SP=SP-1
        CASE   (cAbs); Comp(i)%Stack(SP)=ABS(Comp(i)%Stack(SP))
+       CASE   (cInt); Comp(i)%Stack(SP)=INT(Comp(i)%Stack(SP))
        CASE   (cExp); Comp(i)%Stack(SP)=EXP(Comp(i)%Stack(SP))
        CASE (cLog10); IF (Comp(i)%Stack(SP)<=0._rn) THEN; EvalErrType=3; res=zero; RETURN; ENDIF
                       Comp(i)%Stack(SP)=LOG10(Comp(i)%Stack(SP))

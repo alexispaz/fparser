@@ -3,8 +3,14 @@ The original fparser by Roland Schmehl can be found at http://fparser.sourceforg
 In this [repository](https://github.com/alexispaz/fparser)
 I only included some minor changes with respect to that code:
 
-- Adding autotools to compile fparser as library
+* Adding autotools to compile fparser as library
 
+* Adding `int()`, which actually returns a real number... but rounded as expected
+
+* Adding `%` opreator, the mod() fortran instrinsic function.
+
+* Adding `destf()` routine to destroy `Comp()` ojbect array
+ 
 Here the original fparser README: 
 
 # Fortran 90 function parser v1.1
