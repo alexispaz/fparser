@@ -1,9 +1,21 @@
+A library to parse and evaluate Fortran-style mathematical expressions at runtime.
+
+It can be compiled with autotools:
+
+    autoreconf -fi && ./configure && make
+
+or meson:
+
+    meson setup build --prefix=$PWD/usr --reconfigure && meson install -C build/
+
+# About
+
 The original fparser by Roland Schmehl can be found at http://fparser.sourceforge.net.
 
 In this [repository](https://github.com/alexispaz/fparser)
 I only included some minor changes with respect to that code:
 
-* Adding autotools to compile fparser as library
+* Adding meson and autotools build system 
 
 * Adding `int()`, which actually returns a real number... but rounded as expected
 
