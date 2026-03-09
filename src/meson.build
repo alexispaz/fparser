@@ -4,14 +4,9 @@ src = [
 ]
 
 fparser_lib = static_library(
-  'fparser',       # genera libfparser.a
+  'fparser',
   src,
-  pic: true,       # evita TEXTREL/PIE issues
   install: true,
 )
-          
-# Exportar dependencia para que otros (tests o ejecutables) puedan linkearla
-fparser_dep = declare_dependency(
-  link_with: fparser_lib,
-  include_directories: include_directories('.')
-)
+# pic: true,       # evita TEXTREL/PIE issues
+
